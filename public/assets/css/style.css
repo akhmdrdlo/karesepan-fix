@@ -1,0 +1,136 @@
+.register-card {
+    background-color: white;
+    border-radius: 15px;
+    padding: 20px;
+    width: 100%;
+    box-shadow: rgb(36, 36, 36) 10px 8px;
+    position: relative;
+  }
+  .register-card h2 {
+    background-color: white;
+    color: #ff4b8b;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 10px;
+    position: absolute;
+    top: -35px;
+    left: 0;
+  }
+  .form-group {
+    margin-bottom: 20px;
+  }
+  .form-group label {
+    color: #ff4b8b;
+    font-weight: bold;
+  }
+  .form-control {
+    border: none;
+    border-bottom: 2px solid #ff4b8b;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .btn-register {
+    background-color: #ff4b8b;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+  }
+  .image-container img {
+    max-width: 100%; /* Ensure image scales down on smaller screens */
+    max-height: 500px;
+    box-shadow: rgb(0, 0, 0) 10px 8px;
+    border-radius: 15px;
+  }
+
+     /* Media Queries for Responsiveness */
+     @media (max-width: 768px) {
+    .row {
+      flex-direction: column; /* Stack elements vertically on mobile */
+    }
+    .image-container,
+    .register-container {
+      margin-bottom: 20px; /* Add spacing between elements on mobile */
+    }
+  }
+
+  .login-card {
+    margin-top: 7%;
+  background-color: white;
+  border-radius: 15px;
+  padding: 20px;
+  width: 100%;
+  box-shadow: rgb(36, 36, 36) 10px 8px;
+  position: relative;
+}
+.login-card h2 {
+  background-color: white;
+  color: #ff4b8b;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 10px;
+  position: absolute;
+  top: -35px;
+  left: 0;
+}
+
+.btn-login {
+  background-color: #ff4b8b;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+}
+
+.navbar-custom {
+  z-index: 100;
+  background-color: #ff3e7f;
+}
+.rounded-logo {
+  border-radius: 50%;
+  background-color: #fff;
+  padding: 5px 10px;
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #ff3e7f;
+}
+.banner {
+  background-image: url('https://asset.kompas.com/crops/orQq3RlnkPNDfQgRASMWfCMppwg=/0x32:1000x699/1200x800/data/photo/2021/07/16/60f0d221ba7a6.jpeg');
+  background-size: cover;
+  background-position: center;
+  height: 60vh;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  padding: 2rem;
+  border-radius: 20px;
+}
+.btn-custom {
+  background-color: #ff3e7f;
+  color: white;
+  border-radius: 20px;
+  padding: 0.5rem 1.5rem;
+  font-weight: bold;
+}
+
+
+.btn-pink:hover {
+  background-color: #ffb6c1;
+}
+.btn-pink.active {
+  background-color: #ff1493;
+}
+.bg-pink {
+  background-color: #ff3e7f; /* Adjust the color as needed */
+}
+.recipe-image {
+  max-height: 500px;
+  border-radius: 20px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
