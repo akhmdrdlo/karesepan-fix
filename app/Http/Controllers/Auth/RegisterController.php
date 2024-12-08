@@ -27,7 +27,7 @@ class RegisterController extends Controller
         $ifDuplicate = $request->input('username');
         $user = User::where('username', $ifDuplicate)->first();
         if($user){
-            return redirect('/')->with('danger', 'Akun '.$request->input('username').' sudah terpakai!! Coba username yang lain!!');
+            return redirect('/signin')->with('danger', 'Akun '.$request->input('username').' sudah terpakai!! Coba username yang lain!!');
         }else{
             $user = new User;
             $user->username = $ifDuplicate;
@@ -44,7 +44,7 @@ class RegisterController extends Controller
             }else{
                 $user->save();
             }          
-            return redirect('../')->with('success', 'Akun '.$request->input('name').' berhasil dibuat! Silakan login untuk melanjutkan.');
+            return redirect('../signin')->with('success', 'Akun '.$request->input('name').' berhasil dibuat! Silakan login untuk melanjutkan.');
         }
 
     }   

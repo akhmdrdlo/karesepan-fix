@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css">'
     <link rel="stylesheet" href="../assets/css/style.css">'
-    <title>Cooks Delight</title>
+    <title>Karesepan App</title>
+    <link rel="icon" type="image/png" href="../assets/img/white_logo.png">
 </head>
 <body>
 
@@ -13,7 +14,7 @@
 <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
     <div class="container">
         <a class="navbar-brand" href="#">
-            <img src="../img/logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
+            <img src="../assets/img/white_logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
             <span class="text-white text-center font-weight-bolder">Karesepan App</span>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -22,34 +23,30 @@
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="index.html">Beranda</a>
+                    <a class="nav-link text-white" href="/">Beranda</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white active" href="resep.html">Resep</a>
+                    <a class="nav-link text-white active" href="/list_resep">Resep</a>
                 </li>
             </ul>
-            <a href="../login.html"><button class="btn btn-outline-light ms-3 rounded-pill">Masuk</button></a>
+            <a href="/signin"><button class="btn btn-outline-light ms-3 rounded-pill">Masuk</button></a>
         </div>
     </div>
 </nav>
 
 <header class="bg-pink mt-2">
     <div class="container">
-        <h1 class="text-center text-white p-4">RECIPE</h1>
+        <h1 class="text-center text-white p-4">RESEP</h1>
     </div>
 </header>
 
 <main class="container ">
     <div class="row text-center">
         <div class="col-md-12">
-            <h1>Ayam Goreng Bawang Putih</h1>
-            <p>
-                <span class="badge bg-secondary">2 JAM</span>
-                <span class="badge bg-secondary">SULIT</span>
-                <span class="badge bg-secondary">4 PORSI</span>
-            </p>
-            <p>Selamat datang di Cooks Delight, tempat impian kuliner menjadi nyata! Hari ini, kita akan memulai perjalanan cita rasa dengan hidangan yang menjanjikan untuk meningkatkan pengalaman makan Anda.</p>
-            <img src="https://images.tokopedia.net/img/KRMmCm/2023/10/24/8dba104f-c74f-41bf-94a2-1dbe11e83d7f.jpg" class="img-fluid recipe-image" alt="">
+            <h1>{{ $resepJoin->nama_makanan }}</h1>
+            <h3><span class="badge bg-secondary">{{ $resepJoin->nama_kategori }}</span></h3>
+            <p>{{$resepJoin->deskripsi}}</p>
+            <img src="../{{$resepJoin->link_gambar}}" class="img-fluid recipe-image" alt="">
         </div>
     </div>
 </main>
@@ -61,112 +58,85 @@
 
 <main class="container">
     <div class="row">
+        <!-- Recipe Content -->
         <div class="col-md-8">
-            <h2>Ayam Goreng Bawang Putih</h2>
-            <p>Marinasi ayam dengan bawang putih, jahe, saus tiram, kecap asin & garam. Diamkan minimal 30 menit.</p>
-            <p>Gulingkan ayam ke tepung maizena tipis2 (tepung kering).</p>
-            <p>Goreng ayam dengan bawang putih yang telah di geprek, sambil sesekali di aduk (goreng dalam minyak banyak, hingga ayam terendam).</p>
-            <p>Angkat bawang putih apabila sudah terlebih dulu menguning & garing, lalu lanjutkan menggoreng ayam hingga matang.</p>
-            <p>Sajikan ayam goreng dengan taburan bawang putih.</p>
+            <h3>Langkah-Langkah:</h3>
+            <ol>
+                @foreach(explode('.', $resepJoin->cara_buat) as $langkah)
+                    @if(trim($langkah) != ' ')
+                    <ul>{{ trim($langkah) }}</ul>
+                    @endif<!-- Menampilkan langkah-langkah resepJoin -->
+                @endforeach
+            </ol>
         </div>
+
+        <!-- Ingredients -->
         <div class="col-md-4">
             <h3>BAHAN-BAHAN</h3>
             <ul>
-                <li>1 ekor ayam kampung muda/ayam pejantan (potong kecil2)</li>
-                <li>6 siung bawang putih (haluskan)</li>
-                <li>1 ruas jahe (haluskan)</li>
-                <li>2 bonggol bawang putih (geprek, jangan dikupas kulitnya)</li>
-                <li>1 sdt kecap asin</li>
-                <li>1 sdt saus tiram</li>
-                <li>Secukupnya garam</li>
+                <ol>
+                    {!! nl2br(e($resepJoin->resep)) !!}
+                </ol><!-- Menampilkan bahan-bahan resepJoin -->
             </ul>
         </div>
     </div>
+
+    <!-- Author Info & Like/Share -->
     <div class="row mt-3">
         <div class="col-md-12">
             <div class="d-flex justify-content-between align-items-center mt-3">
                 <div class="col-md-6">
-                    <img src="author-avatar.jpg" alt="Author Avatar" class="rounded-circle" width="30" height="30">
-                    <span>By John Doe</span>
+                    <img src="../{{ $resepJoin->poto}}" alt="Author Avatar" class="rounded-circle" width="75" height="75">
+                    <span>Recipe by <b>{{ $resepJoin->user_name }}</b></span>
                 </div>
-                <div>
+                {{-- <div>
                     @auth
-                        <i class="fal fa-heart pressLove {{$post->likes->contains('user_id',auth()->id()) ? 'redHeart' : ''}} float-right">{{$post->likes->count()}}</i>
+                        <i class="fal fa-heart pressLove {{$resep->likes->contains('user_id',auth()->id()) ? 'redHeart' : ''}} float-right">{{$resep->likes->count()}}</i>
                     @else
-                        <i class="fal fa-heart pressLove float-right">{{$post->likes->count()}}</i>
+                        <i class="fal fa-heart pressLove float-right">{{$resep->likes->count()}}</i>
                     @endauth
                     <i class="fa-solid fa-share-alt"></i>
                     <span>Bagikan</span>
-                </div>
+                </div> --}}
             </div>
         </div>
     </div>
 
     <div class="card text-center bg-pink mt-4">
         <div class="card-body">
-          <h5 class="card-title text-white">Resep Serupa</h5>
-          <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-inner p-3">
-                <div class="carousel-item active">
-                  <div class="row">
-                    <div class=" col-md-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <img src="es-kul-kul.jpg" class="d-block w-100" alt="Es Kul-Kul Buah">
-                                <h5 class="mt-3">Es Kul-Kul Buah</h5>
-                                <p>Manisnya coklat dan buah bersatu dalam kesegaran Es Kul-Kul. Mudah dan simple buatnya.</p>
-                                <a href="#" class="btn btn-primary">Lihat Resep</a>
+            <h5 class="card-title text-white">Resep Serupa</h5>
+            <div id="recipeCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    @foreach ($resepAll->chunk(2) as $index => $recipePair) {{-- Group by 2 --}}
+                        <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
+                            <div class="row">
+                                @foreach ($recipePair as $resep)
+                                    <div class="col-md-6">
+                                        <div class="card">
+                                            <img src="{{ asset($resep->link_gambar) }}" class="card-img-top img-fluid" style="max-height: 200px; object-fit: cover;" alt="{{ $resep->nama_makanan }}">
+                                            <div class="card-body">
+                                                <h5 class="card-title">{{ $resep->nama_makanan }}</h5>
+                                                <p class="card-text">{{ $resep->deskripsi }}</p>
+                                                <a href="{{ route('User.rsp', $resep->id) }}" class="btn btn-outline-dark w-100">LIHAT RESEP</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <img src="nasi-goreng-seafood.jpg" class="d-block w-100" alt="Nasi Goreng Seafood">
-                                <h5>Nasi Goreng Seafood</h5>
-                                <p>Nasi goreng seafood dengan udang dan cumi, beraroma lezat, dan penuh cita rasa laut.</p>
-                                <a href="#" class="btn btn-primary">Lihat Resep</a>
-                            </div>
-                        </div>
-                    </div>
-                  </div>
+                    @endforeach
                 </div>
-                <div class="carousel-item">
-                    <div class="row">
-                      <div class=" col-md-6">
-                          <div class="card">
-                              <div class="card-body">
-                                  <img src="es-kul-kul.jpg" class="d-block w-100" alt="Es Kul-Kul Buah">
-                                  <h5 class="mt-3">Es Kul-Kul Buah</h5>
-                                  <p>Manisnya coklat dan buah bersatu dalam kesegaran Es Kul-Kul. Mudah dan simple buatnya.</p>
-                                  <a href="#" class="btn btn-primary">Lihat Resep</a>
-                              </div>
-                          </div>
-                      </div>
-                      <div class="col-md-6">
-                          <div class="card">
-                              <div class="card-body">
-                                  <img src="nasi-goreng-seafood.jpg" class="d-block w-100" alt="Nasi Goreng Seafood">
-                                  <h5>Nasi Goreng Seafood</h5>
-                                  <p>Nasi goreng seafood dengan udang dan cumi, beraroma lezat, dan penuh cita rasa laut.</p>
-                                  <a href="#" class="btn btn-primary">Lihat Resep</a>
-                              </div>
-                          </div>
-                      </div>
-                    </div>
-                  </div>
-              </div>
-            <button class="carousel-control-prev"   
-       type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Previous</span>   
-      
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-              <span class="carousel-control-next-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Next</span>
-            </button>
-          </div>
+            
+                <!-- Controls -->
+                <a class="carousel-control-prev" href="#recipeCarousel" role="button" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#recipeCarousel" role="button" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </a>
+            </div>
         </div>
     </div>
     
@@ -187,8 +157,8 @@
         <div class="row">
             <div class="col-md-6">
                 <a href="#" class="navbar-brand">
-                    <img src="logo.png" alt="Cooks Delight Logo">
-                    Cooks Delight
+                    <img src="../assets/img/white_logo.png" alt="Karesepan Logo">
+                    Karesepan
                 </a>
             </div>
             <div class="col-md-6">

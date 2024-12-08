@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cooks Delight</title>
+    <title>Karesepan App</title>
+    <link rel="icon" type="image/png" href="../assets/img/white_logo.png">
     <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/style.css">
     <style>
@@ -29,7 +30,7 @@
 <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
     <div class="container">
         <a class="navbar-brand" href="#">
-            <img src="../img/logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
+            <img src="../assets/img/white_logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
             <span class="text-white text-center font-weight-bolder">Karesepan App</span>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,10 +39,10 @@
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="#">Beranda</a>
+                    <a class="nav-link text-white active" href="/">Beranda</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="resep.html">Resep</a>
+                    <a class="nav-link text-white" href="/list_resep">Resep</a>
                 </li>
             </ul>
             <a href="/signin"><button class="btn btn-outline-light ms-3 rounded-pill">Masuk</button></a>
@@ -55,7 +56,7 @@
         <div class="banner">
             <h1 class="display-5 fw-bold">TEMPATNYA RESEP MAKANAN ENAK!!</h1>
             <h3 class="lead">Selamat datang di dunia penuh cita rasa! Temukan resep-resep unik buatan tangan dengan penuh cinta, dan biarkan aroma kelezatan menggoda</h3>
-            <a href="list-resep.html" class="btn btn-custom mt-3">Jelajahi Resep Baru</a>
+            <a href="/list_resep" class="btn btn-custom mt-3">Jelajahi Resep Baru</a>
         </div>
     </div>
     
@@ -67,52 +68,55 @@
             <p class="text-muted">With our diverse collection of recipes we have something to satisfy every palate.</p>
         </div>
     
-        <!-- Filter Buttons -->
+        {{-- <!-- Filter Buttons -->
         <div class="d-flex justify-content-center my-4 text-white">
-            <button class="btn btn-pink mx-2 active">SEMUA</button>
-            <button class="btn btn-pink mx-2">SARAPAN</button>
-            <button class="btn btn-pink mx-2">MAKAN SIANG</button>
-            <button class="btn btn-pink mx-2">MAKAN MALAM</button>
-            <button class="btn btn-pink mx-2">PENUTUP</button>
-        </div>
+            <button class="btn btn-pink mx-2 active" id="all">SEMUA</button>
+            @foreach($kat as $kategori)
+                <button class="btn btn-pink mx-2" data-kategori="{{ $kategori->id }}">{{ $kategori->nama_kategori }}</button>
+            @endforeach
+        </div> --}}
     
         <!-- Recipe Cards -->
-        <div class="row">
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    <img src="https://via.placeholder.com/350x200" class="card-img-top" alt="Ayam Goreng Bawang Putih">
-                    <div class="card-body">
-                        <h5 class="card-title">Ayam Goreng Bawang Putih</h5>
-                        <p class="card-text">Ayam goreng renyah berbumbu bawang putih gurih, sempurna untuk hidangan sehari-hari.</p>
-                        <a href="#" class="btn btn-outline-dark w-100">LIHAT RESEP</a>
+        <div id="recipeCarousel" class="carousel slide" data-bs-ride="carousel">
+
+            <!-- Carousel Items -->
+            <div class="carousel-inner">
+                @foreach ($resepAll->chunk(2) as $index => $recipePair) {{-- Group by 2 --}}
+                    <div class="carousel-item {{ $index == 0 ? 'active' : '' }}" >>
+                        <div class="row justify-content-center">
+                            @foreach ($recipePair as $resep)
+                            <div class="col-md-4">
+                                <div class="card h-100">
+                                    <img src="{{ asset($resep->link_gambar) }}" class="card-img-top img-fluid" style="max-height: 200px; object-fit: cover;" alt="{{ $resep->nama_makanan }}">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ $resep->nama_makanan }}</h5>
+                                        <p class="card-text">{{ Str::limit($resep->deskripsi, 100, '...') }}</p> <!-- Batasi teks -->
+                                        <a href="{{ route('User.rsp', $resep->id) }}" class="btn btn-outline-dark w-100">LIHAT RESEP</a>
+                                    </div>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
                     </div>
-                </div>
+                @endforeach
             </div>
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    <img src="https://via.placeholder.com/350x200" class="card-img-top" alt="Nasi Goreng Seafood">
-                    <div class="card-body">
-                        <h5 class="card-title">Nasi Goreng Seafood</h5>
-                        <p class="card-text">Nasi goreng seafood dengan udang dan cumi, beraroma lezat, dan penuh cita rasa laut.</p>
-                        <a href="#" class="btn btn-outline-dark w-100">LIHAT RESEP</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    <img src="https://via.placeholder.com/350x200" class="card-img-top" alt="Sayur Bening Bayam">
-                    <div class="card-body">
-                        <h5 class="card-title">Sayur Bening Bayam</h5>
-                        <p class="card-text">Sayur bening bayam yang segar dan gurih, kaya vitamin, cocok untuk menu sehat.</p>
-                        <a href="#" class="btn btn-outline-dark w-100">VIEW RECIPE</a>
-                    </div>
-                </div>
-            </div>
+        
+            <!-- Controls -->
+            <a class="carousel-control-prev" href="#recipeCarousel" role="button" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#recipeCarousel" role="button" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </a>
         </div>
+        
+
     </div>
     
     <div class="container-fluid ">
-        <div class="container card bg-pink">
+        <div class="container card bg-pink text-white">
             <div class="row">
                 <div class="col-md-6 card-header">
                     <h2>KULINER KAMI</h2>
@@ -157,8 +161,8 @@
         <div class="row">
             <div class="col-md-6">
                 <a href="#" class="navbar-brand">
-                    <img src="logo.png" alt="Cooks Delight Logo">
-                    Cooks Delight
+                    <img src="../assets/img/white_logo.png" alt="Karesepan Logo">
+                    Karesepan
                 </a>
             </div>
             <div class="col-md-6">
@@ -173,25 +177,42 @@
                         <a class="nav-link" href="#">Tentang Kami</a>
                     </li>
                 </ul>
-                <ul class="nav justify-content-end">
-                    <li class="nav-item">
-                        <a href="#" class="nav-link"><i class="bi bi-tiktok"></i></a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link"><i class="bi bi-instagram"></i></a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link"><i class="bi bi-facebook"></i></a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link"><i class="bi bi-youtube"></i></a>
-                    </li>
-                </ul>
             </div>
         </div>
         <p class="mt-3">Copyright © 2024 Cooks Delight</p>
     </div>
 </footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.querySelectorAll('.btn.btn-pink').forEach(button => {
+        button.addEventListener('click', function() {
+            // Remove active class from all buttons
+            document.querySelectorAll('.btn.btn-pink').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            // Add active class to the clicked button
+            this.classList.add('active');
+
+            // Get the category ID from the button or filter for all
+            let categoryId = this.getAttribute('data-kategori');
+            let resepItems = document.querySelectorAll('.resep-item');
+
+            if (categoryId) {
+                resepItems.forEach(item => {
+                    if (item.getAttribute('data-kategori') === categoryId) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            } else {
+                // Show all items if "SEMUA" button is clicked
+                resepItems.forEach(item => {
+                    item.style.display = 'block';
+                });
+            }
+        });
+    });
+</script>
 </body>
 </html>

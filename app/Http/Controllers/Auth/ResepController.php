@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use App\Models\resep_makanan;
+use App\Models\kategori;
 
 class ResepController extends Controller
 {
@@ -39,7 +42,9 @@ class ResepController extends Controller
 
     public function create()
     {
-        //
+        $kategori = kategori::all();
+        $resep = resep_makanan::all();
+        return view('admin/tambah_resep', compact('kategori','resep'));
     }
 
     /**
@@ -48,27 +53,26 @@ class ResepController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'nama_makanan' => 'required|numeric',
+            'nama_makanan' => 'required',
+            'kat_id' => 'required',
             'deskripsi' => 'required',
             'resep' => 'required',
             'cara_buat' => 'required',
-            'link_gambar' => 'required',
         ]);
-        $user = user::where('username', '=', Auth::user()->username)->first()->id ?? null;
-
-        $cekResep = resep::where(Str::upper('nama_makanan'), Str::upper($request->nama_makanan))->first();
+        $cekResep = resep_makanan::where(Str::upper('nama_makanan'), Str::upper($request->nama_makanan))->first();
         if($cekResep){
             return redirect('/resep')->with('danger', 'Resep makanan sudah ada, Silahkan gunakan Search dan edit resep dengan nama yang sama!!');
         }else if(!$cekResep){
-            $resep = new resep;
-            $resep->user_id = $user;
+            $resep = new resep_makanan;
+            $resep->user_id = Auth::user()->id;
             $resep->nama_makanan = $request->input('nama_makanan');
+            $resep->kat_id = $request->input('kat_id');
             $resep->deskripsi = $request->input('deskripsi');
             $resep->resep = $request->input('resep');
             $resep->cara_buat = $request->input('cara_buat');
             if ($request->hasFile('link_gambar')) {
                 $image = $request->file('link_gambar');
-                $imageName = time() . '.' . $image->getClientOriginalExtension();
+                $imageName = $request->input('nama_makanan').time() . '.' . $image->getClientOriginalExtension();
                 $image->move(public_path('images/resep'), $imageName);
                 $resep->link_gambar = 'images/resep/' . $imageName;
                 $resep->save();
@@ -80,20 +84,26 @@ class ResepController extends Controller
         }
     }
 
+    public function storeKat(Request $request){
+        $validatedData = $request->validate([
+            'nama_kategori' => 'required',
+        ]);
+        $Kategori = new kategori;
+        $Kategori->nama_kategori = $request->input('nama_kategori');
+        $Kategori->save();
+
+        return redirect('/resep')->with('primary', 'Kategori berhasil ditambahkan!!');
+    }
+
     /**
      * Display the specified resource.
      */
     public function show($id){
         $resep = resep_makanan::findOrFail($id);
-        // $resep_makananjoin = resep_makanan::join('users', 'users.id','=','shipment.staff_id')
-        // ->join('gudang', 'gudang.id','=','shipment.gdg_id')
-        // ->get(['users.nama_lengkap','users.notelp','shipment.id','shipment.invoice_id','shipment.created_at','gudang.nama_gudang','gudang.alamat']);
-
-        $shipmentDetailJoin = ShipmentDetail::where('shipor_id', $id)
-        ->join('shipment','shipment.id','=','shipmentdetails.shipor_id')
-        ->join('barangs', 'barangs.id', '=', 'shipmentdetails.brg_id')
-        ->get(['barangs.merek','shipmentdetails.shipor_id','shipmentdetails.jumlah','shipmentdetails.penerima','shipmentdetails.notelp_penerima','shipmentdetails.alamat_kirim','shipmentdetails.status']);
-        return view ('detailShipment', compact('shipment','shipmentjoin','shipmentDetailJoin'));
+        $resepJoin = resep_makanan::where('resep_makanan.id', $resep->id)
+        ->join('users','users.id','=','resep_makanan.user_id')
+        ->get(['users.name','resep_makanan.nama_makanan','resep_makanan.deskripsi','resep_makanan.resep','resep_makanan.cara_buat','resep_makanan.link_gambar']);
+        return view ('admin/detail_resep', compact('resep','resepJoin'));
     }
 
 
@@ -102,7 +112,11 @@ class ResepController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $resep = resep_makanan::findOrFail($id);
+        $resepJoin = resep_makanan::where('resep_makanan.id', $resep->id)
+        ->join('users','users.id','=','resep_makanan.user_id')
+        ->get(['users.name','resep_makanan.nama_makanan','resep_makanan.deskripsi','resep_makanan.resep','resep_makanan.cara_buat','resep_makanan.link_gambar']);
+        return view ('admin/edit_resep', compact('resep','resepJoin'));
     }
 
     /**
@@ -110,14 +124,35 @@ class ResepController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        try{
+            $resep = resep_makanan::findOrFail($id);
+            $resep->nama_makanan = $request->nama_makanan;
+            $resep->kat_id = $request->kat_id;
+            $resep->deskripsi = $request->deskripsi;
+            $resep->resep = $request->resep;
+            $resep->cara_buat = $request->cara_buat;
+            if ($request->hasFile('link_gambar')) {
+                $image = $request->file('link_gambar');
+                $imageName = $request->input('nama_makanan').time(). '.'. $image->getClientOriginalExtension();
+                $image->move(public_path('images/resep'), $imageName);
+                $resep->link_gambar = 'images/resep/'. $imageName;
+            }
+            $resep->save();
+
+            return redirect('/resep')->with('success', 'Data resep berhasil diubah!!');
+        }
+        catch(\Exception $e){
+            return redirect('/resep')->with('danger', 'Terjadi kesalahan: '.$e->getMessage());
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
+    
     public function destroy(string $id)
     {
-        //
+        $resep = resep_makanan::findOrFail($id)->delete();
+        return redirect('/resep')->with('danger', 'Data resep berhasil dihapus!!');
     }
 }

@@ -46,11 +46,11 @@
               </div>
             </form>
                   @if (session('success'))
-                      <div class="alert alert-success text-white">
+                      <div class="alert alert-success text-dark">
                           {{ session('success') }}
                       </div>
                   @elseif (session('danger'))
-                      <div class="alert alert-danger text-white">
+                      <div class="alert alert-danger text-dark">
                           {{ session('danger') }}
                       </div>
                   @endif

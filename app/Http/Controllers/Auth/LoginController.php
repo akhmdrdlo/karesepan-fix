@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\resep_makanan;
 
 class LoginController extends Controller
 {
@@ -21,11 +22,53 @@ class LoginController extends Controller
             $username = Auth::user()->username;
             $name = Auth::user()->name;
             $email = Auth::user()->email;
+            $resep = resep_makanan::all();
             session(['id' => Auth::user()->username]);
-            return redirect('/dashboard')->with('success', "Selamat datang kembali, $name di Karesepan Admin!!");
+            session(['resep' => $resep]);
+    
+            // Hitung jumlah resep yang diposting oleh pengguna dan tentukan title
+            $recipeCount = resep_makanan::where('user_id', Auth::user()->id)->count();
+            $title = $this->getTitleByRecipeCount($recipeCount);
+    
+            return redirect()->route('user.profile')->with([
+                'success' => "Selamat datang kembali, $name di Karesepan Admin!!",
+                'resep' => $resep,
+                'title' => $title,
+                'recipeCount' => $recipeCount,
+            ]);
         } else {
             // Authentikasi gagal dilakukan
             return redirect('/signin')->with('danger', 'Username atau password yang Anda masukkan salah. Silakan coba lagi.');
+        }
+    }
+
+    public function profile()
+    {
+        // Ambil data pengguna yang sedang login
+        $user = auth()->user();
+        
+        // Hitung jumlah resep yang diposting oleh pengguna
+        $recipeCount = resep_makanan::where('user_id', $user->id)->count();
+        
+        // Tentukan title berdasarkan jumlah resep
+        $title = $this->getTitleByRecipeCount($recipeCount);
+
+        // Ambil daftar resep yang diposting oleh pengguna yang sedang login
+        $userRecipes = resep_makanan::where('user_id', $user->id)->get();
+
+        return view('admin/dashboard', compact('user', 'title', 'recipeCount', 'userRecipes'));
+    }
+
+    private function getTitleByRecipeCount($count)
+    {
+        if ($count >= 5) {
+            return 'Master Chef';
+        } elseif ($count >= 3){
+            return 'Experienced Cook';
+        } elseif ($count >= 1) {
+            return 'Novice Chef';
+        } else {
+            return 'Newbie';
         }
     }
 
@@ -43,6 +86,6 @@ class LoginController extends Controller
         $request->session()->regenerateToken();
 
         // redirect ke halaman login
-        return redirect('/signin')->with('danger', 'Anda berhasil logout.');
+        return redirect('/')->with('danger', 'Anda berhasil logout.');
     }
 }

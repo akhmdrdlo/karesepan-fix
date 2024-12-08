@@ -4,11 +4,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
-  <link rel="icon" type="image/png" href="../assets/img/favicon.png">
-  <title>
-    Material Dashboard 3 by Creative Tim
-  </title>
+  <title>Karesepan Admin Dashboard</title>
+  <link rel="icon" type="image/png" href="../assets/img/white_logo.png">
   <!--     Fonts and icons     -->
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900" />
   <!-- Nucleo Icons -->
@@ -24,6 +21,7 @@
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
+  @if(Auth::check())
   <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
@@ -35,13 +33,13 @@
     <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link text-dark" href="dashboard.html">
+          <a class="nav-link text-dark" href="profile">
             <i class="material-symbols-rounded opacity-5">dashboard</i>
             <span class="nav-link-text ms-1">Dashboard</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link  active bg-gradient-dark text-white" href="tables.html">
+          <a class="nav-link active bg-gradient-dark text-white" href="/resep">
             <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Tabel Resep</span>
           </a>
@@ -50,15 +48,17 @@
           <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Account pages</h6>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-dark" href="profile.html">
+          <a class="nav-link text-dark" href="profile">
             <i class="material-symbols-rounded opacity-5">person</i>
             <span class="nav-link-text ms-1">Profile</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-dark" href="sign-in.html">
-            <i class="material-symbols-rounded opacity-5">login</i>
-            <span class="nav-link-text ms-1">Sign In</span>
+          <a class="nav-link text-dark " href="#" data-bs-toggle="modal" data-bs-target="#logout">
+            <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="material-symbols-rounded opacity-5">logout</i>
+            </div>
+            <span class="nav-link-text ms-1">Keluar</span>
           </a>
         </li>
       </ul>
@@ -107,33 +107,112 @@
     </nav>
     <!-- End Navbar -->
     <div class="container-fluid py-4">
-          <div class="container">
-            <div class="row">
-              <div class="col-md-4">   
-                <img src="https://cdn.idntimes.com/content-images/community/2024/05/screenshot-20240510-195912-96220320ab1516616da2417addf769e4-027298afd035e97e639bc3c97744e2b3_600x400.jpg" class="img-fluid rounded" alt="Gambar [Nama Makanan]">
-              </div>
-              <div class="col-md-8">
+      <div class="container my-4">
+        <div class="row">
+            @foreach($resepJoin as $resepDetail)
+            {{$resepDetail->id}}
+            <div class="col-md-12">
+                <!-- Gambar di atas dan memenuhi container -->
+                <div class="text-center mb-4">
+                    <img src="../{{$resepDetail->link_gambar}}" class="img-fluid rounded" alt="Gambar {{$resepDetail->nama_makanan}}" style="max-height: 400px; object-fit: cover; width: 100%; height: auto;">
+                </div>
+    
+                <!-- Card untuk detail resep -->
                 <div class="card">
-                  <div class="card-body">
-                    <h5 class="card-title text-center">[Nama Makanan]</h5>
-                    <p class="card-text">[Deskripsi Makanan]</p>
-                    <p class="card-text"><b>Bahan-bahan:</b><br>
-                      [Masukkan bahan-bahan dari textarea]</p>
-                    <p class="card-text"><b>Cara Membuat:</b><br>
-                      [Masukkan langkah-langkah pembuatan dari testarea]</p>
-                    <div class="d-flex justify-content-center">
-                      <a href="#" class="form-control btn btn-md btn-primary mx-2">
-                          <i class="fas fa-pen fa-sm fa-fw mr-2 text-gray-400"></i> | UBAH
-                      </a>
+                    <div class="card-body">
+                        <!-- Judul Resep -->
+                        <h5 class="card-title text-center">{{$resepDetail->nama_makanan}}</h5>
+                        <p class="card-text text-center"><b>Oleh:</b> {{$resepDetail->name}}</p>
+    
+                        <!-- Deskripsi Resep -->
+                        <p class="card-text">{{$resepDetail->deskripsi}}</p>
+    
+                        <!-- Tabel Bahan dan Cara Membuat -->
+                        <div class="row">
+                          <div class="col-md-6">
+                            <h6><b>Bahan-Bahan:</b></h6>
+                            <ol>
+                              {!! nl2br(e($resepDetail->resep)) !!}
+                            </ol>
+                        </div>
+    
+                            <div class="col-md-6">
+                                <h6><b>Cara Membuat:</b></h6>
+                                <ol>
+                                    @foreach(explode('.', $resepDetail->cara_buat) as $langkah)
+                                        @if(trim($langkah) != ' ')
+                                        <ul>{{ trim($langkah) }}</ul>
+                                        @endif
+                                    @endforeach
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </div>
+
+    <div class="container-fluid py-4">
+      <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header pb-0">
+                <div class="d-flex">
+                  <h5 class="mb-0">Ubah Data Resep</h5>
+                </div>
+              </div>
+              <hr>
+              <div class="card-body" style="margin-top:-25px;">
+                <form action="{{ route('resep.update', $resep->id) }}" method="POST" role="form">
+                @csrf
+                @method('PUT')
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label for="example-text-input" class="form-control-label font-weight-bolder">Nama Resep</label>
+                      <input class="form-control" value="{{$resep->nama_makanan}}" autocomplete="off" type="text" name="nama_makanan" placeholder="Nama Makanan....">
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label for="example-text-input" class="form-control-label font-weight-bolder">Deskripsi Singkat Resep</label>
+                      <textarea class="form-control" autocomplete="off" name="deskripsi" placeholder="Berikan deskripsi makanannya...">{{$resep->deskripsi}}</textarea>
+                    </div>
+                  </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="example-text-input" class="form-control-label font-weight-bolder">Resep Masakan</label>
+                        <textarea class="form-control" autocomplete="off" name="resep" placeholder="Apa aja bahan yang dibutuhkan....">{{$resep->resep}}</textarea>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="example-text-input" class="form-control-label font-weight-bolder">Langkah membuat Masakan</label>
+                        <textarea class="form-control" autocomplete="off" name="cara_buat" placeholder="Bagaimana cara buatnya....">{{$resep->cara_buat}}</textarea>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-10">
+                      <button class="form-control btn btn-md btn-warning col-md-10" type="submit"><i class="fa fa-pen"></i> | EDIT BARANG </button>
+                    </div>
+                    <div class="col-md-2">
                       <a class="form-control btn btn-md btn-danger mx-4" href="#" data-bs-toggle="modal" data-bs-target="#hapus">
                         <i class="fas fa-trash fa-sm fa-fw mr-2 text-gray-400"></i> | HAPUS
-                      </a>
+                    </a>
                     </div>
                   </div>
                 </div>
+                </form>
               </div>
             </div>
           </div>
+        </div>
+
 
           <footer class="footer py-4  ">
             <div class="container-fluid">
@@ -153,26 +232,43 @@
     </div>
   </main>
 
-  <div class="modal fade" id="hapus" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelLogout" aria-hidden="true">
+  <div class="modal fade" id="logout" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelLogout" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-            <h4 class="modal-title" id="HapusModal">Konfirmasi Hapus</h4>
+          <h4 class="modal-title" id="exampleModalLabelLogout">Upss!!</h4>
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
         <div class="modal-body">
-            <p>Apakah Anda yakin ingin menghapus resep <strong>"{{ $resep->nama_makanan }}"</strong>?</p>
+          <p>Apa kamu yakin ingin Logout, {{ Auth::User()->name }} ?</p>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-            <a href="#" class="btn btn-danger" onclick="event.preventDefault(); document.getElementById('hapus-form').submit();">Hapus</a>
-            <form id="hapus-form" action="{{ route('resep.destroy', $resep->id) }}" method="POST" style="display: none;">
-                @csrf
-                @method('DELETE')
-            </form>
+          <a href="/logout" class="btn btn-outline-danger" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+          <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+            @csrf
+          </form>
         </div>
       </div>
     </div>
   </div>
+  @elseif(!Auth::check())
+  <div class="container mt-8">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-header text-center">Error 401 - Unauthorized User</div>
+          <div class="card-body text-center">
+            <h3><i class="fas fa-times-circle text-danger"></i><br>ERROR 401</h3>
+            <h3>Oops! Anda tidak memiliki izin untuk mengakses halaman ini.</h3>
+            <h6><a href="/signin" class="text-primary">Login </a>sebagai admin untuk mendapatkan izin ke halaman ini!!</h6>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  @endif
   <!--   Core JS Files   -->
   <script src="../assets/js/core/popper.min.js"></script>
   <script src="../assets/js/core/bootstrap.min.js"></script>
@@ -183,6 +279,16 @@
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="../assets/js/material-dashboard.min.js?v=3.2.0"></script>
+  <script>
+    document.querySelectorAll('textarea').forEach((textarea) => {
+      textarea.style.height = 'auto';
+      textarea.style.height = textarea.scrollHeight + 'px';
+      textarea.addEventListener('input', () => {
+          textarea.style.height = 'auto';
+          textarea.style.height = textarea.scrollHeight + 'px';
+          });
+    });
+  </script>
 </body>
 
 </html>

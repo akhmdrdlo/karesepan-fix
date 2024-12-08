@@ -5,11 +5,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
-  <link rel="icon" type="image/png" href="../assets/img/logo-ct.png">
-  <title>
-    Karesepan Admin Dashboard
-  </title>
+  <title>Karesepan Admin Dashboard</title>
+  <link rel="icon" type="image/png" href="../assets/img/white_logo.png">
   <!--     Fonts and icons     -->
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900" />
   <!-- Nucleo Icons -->
@@ -25,6 +22,7 @@
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
+  @if(Auth::check())
   <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
@@ -36,13 +34,13 @@
     <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link text-dark" href="dashboard.html">
+          <a class="nav-link text-dark" href="profile">
             <i class="material-symbols-rounded opacity-5">dashboard</i>
             <span class="nav-link-text ms-1">Dashboard</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active bg-gradient-dark text-white" href="tables.html">
+          <a class="nav-link active bg-gradient-dark text-white" href="resep">
             <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Tabel Resep</span>
           </a>
@@ -51,15 +49,17 @@
           <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Account pages</h6>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-dark" href="profile.html">
+          <a class="nav-link text-dark" href="profile">
             <i class="material-symbols-rounded opacity-5">person</i>
-            <span class="nav-link-text ms-1">Profil</span>
+            <span class="nav-link-text ms-1">Profile</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-dark" href="sign-in.html">
-            <i class="material-symbols-rounded opacity-5">logout</i>
-            <span class="nav-link-text ms-1">Log Out</span>
+          <a class="nav-link text-dark " href="#" data-bs-toggle="modal" data-bs-target="#logout">
+            <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="material-symbols-rounded opacity-5">logout</i>
+            </div>
+            <span class="nav-link-text ms-1">Keluar</span>
           </a>
         </li>
       </ul>
@@ -80,25 +80,15 @@
       <div class="container-fluid py-1 px-3">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Halaman</a></li>
-            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Tabel Resep</li>
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Pages</a></li>
+            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Dashboard</li>
           </ol>
         </nav>
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
-          <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-            <div class="input-group input-group-outline">
-              <label class="form-label">Type here...</label>
-              <input type="text" class="form-control">
-            </div>
-          </div>
-          <ul class="navbar-nav d-flex align-items-center  justify-content-end">
-            <li class="nav-item px-3 d-flex align-items-center">
-              <a href="javascript:;" class="nav-link text-body p-0">
-                <i class="material-symbols-rounded fixed-plugin-button-nav">settings</i>
-              </a>
-            </li>
+          <ul class="navbar-nav ms-md-auto pe-md-3 d-flex  align-items-center  justify-content-end">
             <li class="nav-item d-flex align-items-center">
               <a href="../pages/sign-in.html" class="nav-link text-body font-weight-bold px-0">
+                {{ Auth::user()->name }}
                 <i class="material-symbols-rounded">account_circle</i>
               </a>
             </li>
@@ -106,6 +96,15 @@
         </div>
       </div>
     </nav>
+    @if (session('success'))
+    <div class="alert alert-success text-white text-center">
+        {{ session('success') }}
+    </div>
+    @elseif (session('danger'))
+    <div class="alert alert-danger text-white text-center">
+        {{ session('danger') }}
+    </div>
+    @endif
     <!-- End Navbar -->
     <div class="container-fluid py-2">
       <div class="row">
@@ -120,12 +119,13 @@
         <div class="col-lg-12 col-md-12 mb-md-0 mb-4">
           <div class="card">
             <div class="card-header">
-              <div class="border-radius-lg pt-4 px-4">
-                <h6 class="text-white text-capitalize ps-3">Tabel Barang</h6>
-                <a href="/tambahResep" class="btn btn-success float-end" style="margin-top:-35px;">
-                  <i class="fa fa-plus"></i> Tambah Barang
+                <h6 class="text-capitalize ps-3">Tabel Barang</h6>
+                <a href="#" data-bs-toggle="modal" data-bs-target="#tambahKatModal" class="btn btn-primary float-end" style="margin-top:-35px; margin-left:5px;">
+                  <i class="fa fa-plus"></i> TAMBAH KATEGORI
                 </a>
-              </div>
+                <a href="/tambahResep" class="btn btn-success float-end" style="margin-top:-35px;">
+                  <i class="fa fa-plus"></i> TAMBAH RESEP
+                </a>
             </div>
             <div class="card-body pb-3 px-4">
               <div class="table-responsive">
@@ -138,20 +138,20 @@
                       <th class="text-center text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Aksi</th>
                     </tr>
                   </thead>
-                  @foreach($resep as $item)
-                <tbody>
-                    <tr>
-                        <td class="text-center">{{$loop->iteration}}</td>
-                        <td class="text-center"><img src="{{$item->link_gambar}}" alt="Nasi Goreng"></td>
-                        <td class="text-center">{{$item->nama_makanan}}</td>
-                        <td class="text-center">
-                          <a href="{{ route('resepDetail.show', $item->id) }}" class="text-secondary font-weight-bold text-lg">
-                            <span class="badge badge-lg bg-info"><i class="fa fa-info"></i></span>
-                          </a>
-                        </td>
-                    </tr>
-                </tbody>
-                @endforeach
+                  <tbody>
+                    @foreach($resep as $item)
+                      <tr>
+                          <td class="text-center">{{$loop->iteration}}</td>
+                          <td class="text-center"><img src="{{$item->link_gambar}}"" class="w-50 border-radius-lg shadow-sm" alt="{{$item->nama_makanan}}"></td>
+                          <td class="text-center">{{$item->nama_makanan}}</td>
+                          <td class="text-center">
+                            <a href="{{ route('resepDetail.show', $item->id) }}" class="text-secondary font-weight-bold text-lg">
+                              <span class="badge badge-lg bg-info"><i class="fa fa-info"></i></span>
+                            </a>
+                          </td>
+                      </tr>
+                    @endforeach
+                  </tbody>
                 </table>
               </div>
             </div>
@@ -174,7 +174,73 @@
         </div>
       </footer>
     </div>
+          <!-- Modal Tambah Kategori -->
+          <div class="modal fade" id="tambahKatModal" tabindex="-3" role="dialog" aria-labelledby="tambahKatModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header justify-content-center">
+                  <h5 class="modal-title font-weight-bolder" id="tambahKatModalLabel"> Tambah Jenis Kategori </h5>
+                </div>
+                <div class="modal-body">
+                  <form id="tambahKat" action="{{ route('tambahKat') }}" method="POST" role="form" id="tambahKatModal">
+                    @csrf
+                    <div class="form-group ">
+                      <div class="col-md-12">
+                        <div class="form-group input-group input-group-outline mb-">
+                          <label class="form-label">Jenis Kategori</label>
+                          <input class="form-control" required autocomplete="off" type="text" name="nama_kategori" >
+                        </div>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CLOSE</button>
+                      <button type="submit" class="btn btn-primary"> <i class="fa fa-pen"></i> TAMBAH</button>
+                      {{-- <a href="/addBarang" class="btn btn-primary" onclick="event.preventDefault(); document.getElementById('tambahKat').submit();"><i class="fa fa-pen"></i> Tambah</a> --}}
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
   </main>
+
+  <div class="modal fade" id="logout" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelLogout" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="exampleModalLabelLogout">Upss!!</h4>
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Apa kamu yakin ingin Logout, {{ Auth::User()->name }} ?</p>
+        </div>
+        <div class="modal-footer">
+          <a href="/logout" class="btn btn-outline-danger" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+          <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+            @csrf
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  @elseif(!Auth::check())
+  <div class="container mt-8">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-header text-center">Error 401 - Unauthorized User</div>
+          <div class="card-body text-center">
+            <h3><i class="fas fa-times-circle text-danger"></i><br>ERROR 401</h3>
+            <h3>Oops! Anda tidak memiliki izin untuk mengakses halaman ini.</h3>
+            <h6><a href="/signin" class="text-primary">Login </a>sebagai admin untuk mendapatkan izin ke halaman ini!!</h6>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  @endif
   <!--   Core JS Files   -->
   <script src="../assets/js/core/popper.min.js"></script>
   <script src="../assets/js/core/bootstrap.min.js"></script>

@@ -4,11 +4,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
-  <link rel="icon" type="image/png" href="../assets/img/logo-ct.png">
-  <title>
-    Karesepan Admin Dashboard
-  </title>
+  <title>Karesepan Admin Dashboard</title>
+  <link rel="icon" type="image/png" href="../assets/img/white_logo.png">
   <!--     Fonts and icons     -->
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900" />
   <!-- Nucleo Icons -->
@@ -36,13 +33,13 @@
     <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link active bg-gradient-dark text-white" href="dashboard.html">
+          <a class="nav-link active bg-gradient-dark text-white" href="profile">
             <i class="material-symbols-rounded opacity-5">dashboard</i>
             <span class="nav-link-text ms-1">Dashboard</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-dark" href="tables.html">
+          <a class="nav-link text-dark" href="resep">
             <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Tabel Resep</span>
           </a>
@@ -51,7 +48,7 @@
           <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Account pages</h6>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-dark" href="profile.html">
+          <a class="nav-link text-dark" href="profile">
             <i class="material-symbols-rounded opacity-5">person</i>
             <span class="nav-link-text ms-1">Profile</span>
           </a>
@@ -87,20 +84,10 @@
           </ol>
         </nav>
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
-          <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-            <div class="input-group input-group-outline">
-              <label class="form-label">Type here...</label>
-              <input type="text" class="form-control">
-            </div>
-          </div>
-          <ul class="navbar-nav d-flex align-items-center  justify-content-end">
-            <li class="nav-item px-3 d-flex align-items-center">
-              <a href="javascript:;" class="nav-link text-body p-0">
-                <i class="material-symbols-rounded fixed-plugin-button-nav">settings</i>
-              </a>
-            </li>
+          <ul class="navbar-nav ms-md-auto pe-md-3 d-flex  align-items-center  justify-content-end">
             <li class="nav-item d-flex align-items-center">
               <a href="../pages/sign-in.html" class="nav-link text-body font-weight-bold px-0">
+                {{ Auth::user()->name }}
                 <i class="material-symbols-rounded">account_circle</i>
               </a>
             </li>
@@ -109,15 +96,6 @@
       </div>
     </nav>
     <!-- End Navbar -->
-    @if (session('success'))
-    <div class="alert alert-success text-white text-center">
-        {{ session('success') }}
-    </div>
-    @elseif (session('danger'))
-    <div class="alert alert-danger text-white text-center">
-        {{ session('danger') }}
-    </div>
-    @endif
     <div class="container-fluid py-2">
       <div class="row">
         <div class="ms-3">
@@ -125,8 +103,17 @@
           <p class="mb-4">
             Karesepan Admin Dashboard
           </p>
+          @if (session('success'))
+          <div class="alert alert-success text-white text-center">
+              {{ session('success') }}
+          </div>
+          @elseif (session('danger'))
+          <div class="alert alert-danger text-white text-center">
+              {{ session('danger') }}
+          </div>
+          @endif
         </div>
-        <div class="card card-body mx-4 mx-md-2">
+        {{-- <div class="card card-body mx-4 mx-md-2">
           <div class="row gx-4 mb-2">
             <div class="col-auto">
               <div class="avatar avatar-xl position-relative">
@@ -144,12 +131,30 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> --}}
+
+        <div class="card text-center bg-light mt-4">
+          <div class="card-body">
+              <!-- Profile Picture -->
+              <div class="d-flex justify-content-center align-items-center mb-3">
+                  <img src="{{ Auth::user()->poto }}" class="rounded-circle" alt="Profile Avatar" width="100" height="100">
+              </div>
+      
+              <!-- Username and Title -->
+              <h3 class="card-title mb-2">
+                  {{ $user->name }} 
+                  <span class="badge bg-primary">{{ $title }}</span>
+              </h3>
+      
+              <!-- Recipe Count -->
+              <p class="card-text">Jumlah Resep: <strong>{{ $recipeCount }}</strong></p>
+          </div>
+      </div>
       </div>
       <div class="row mb-4 mt-2">
         <div class="col-lg-12 col-md-12 mb-md-0 mb-4">
           <div class="card">
-            <div class="card-body px-0 pb-2">
+            <div class="card-body px-4 pb-2">
               <div class="table-responsive">
                 <table class="table align-items-center mb-0 display" id="tabelku">
                   <thead>
@@ -161,15 +166,18 @@
                     </tr>
                 </thead>
                 <tbody>
+                  @foreach ($userRecipes as $recipe)
                     <tr>
-                        <td class="text-center">1</td>
-                        <td class="text-center"><img src="https://via.placeholder.com/150" alt="Nasi Goreng"></td>
-                        <td class="text-center">Nasi Goreng</td>
+                        <td class="text-center">{{$loop->iteration}}</td>
+                        <td class="text-center"><img src="{{$recipe->link_gambar}}" class="w-30 border-radius-lg shadow-sm"></td>
+                        <td class="text-center">{{$recipe->nama_makanan}}</td>
                         <td class="text-center">
-                          <button class="btn btn-primary">Detail</button>
-                          <button class="btn btn-warning">Edit</button>
-                        3</td>
+                          <a href="{{ route('resepDetail.show', $recipe->id) }}" class="btn btn-outline-primary">
+                            <i class="fa fa-info"></i> Lihat Resep
+                          </a>
+                        </td>
                     </tr>
+                    @endforeach
                 </tbody>
                 </table>
               </div>
