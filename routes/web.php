@@ -32,5 +32,12 @@ Route::post('/addKategori', [App\Http\Controllers\Auth\ResepController::class, '
 Route::get('/resepDetail/{id}', [App\Http\Controllers\Auth\ResepController::class, 'show'])->name('resepDetail.show');
 Route::put('/resepEdit/{id}', [App\Http\Controllers\Auth\ResepController::class, 'update'])->name('resep.update');
 
-Route::delete('/resepDetail/{id}', [App\Http\Controllers\Auth\ResepController::class, 'destroy'])->name('resepDetail.destroy');
+Route::delete('/resepDetail/{id}', [App\Http\Controllers\Auth\ResepController::class, 'destroy'])->name('resep.destroy');
 
+Route::get('/offline', function () {
+    return view('vendor/laravelpwa/offline');
+});
+Route::get('/admin', [App\Http\Controllers\Auth\RegisterController::class, 'index']);
+Route::get('/adminEdit/{id}', [App\Http\Controllers\Auth\RegisterController::class, 'edit'])->name('user.edit');
+Route::put('/adminUpdate/{id}', [App\Http\Controllers\Auth\RegisterController::class, 'update'])->name('user.update');
+Route::delete('/adminEdit/{id}', [App\Http\Controllers\Auth\RegisterController::class, 'destroy'])->name('user.destroy');

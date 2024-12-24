@@ -37,7 +37,7 @@
     <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link active bg-gradient-dark text-white" href="profile">
+          <a class="nav-link text-dark" href="profile">
             <i class="material-symbols-rounded opacity-5">dashboard</i>
             <span class="nav-link-text ms-1">Dashboard</span>
           </a>
@@ -52,7 +52,7 @@
           <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Account pages</h6>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-dark" href="admin">
+          <a class="nav-link active bg-gradient-dark text-white" href="admin">
             <i class="material-symbols-rounded opacity-5">person</i>
             <span class="nav-link-text ms-1">Profile</span>
           </a>
@@ -100,13 +100,12 @@
       </div>
     </nav>
     <!-- End Navbar -->
-    <div class="container-fluid py-2">
-      <div class="row">
+    <div class="container-fluid px-2 px-md-4">
+      <div class="page-header min-height-300 border-radius-xl mt-4" style="background-image: url('https://images.unsplash.com/photo-1531512073830-ba890ca4eba2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');">
+        <span class="mask  bg-gradient-dark  opacity-6"></span>
+      </div>
+      <div class="card card-body mx-2 mx-md-2 mt-n10">
         <div class="ms-3">
-          <h3 class="mb-0 h4 font-weight-bolder">Dashboard</h3>
-          <p class="mb-4">
-            Karesepan Admin Dashboard
-          </p>
           @if (session('success'))
           <div class="alert alert-success text-white text-center">
               {{ session('success') }}
@@ -117,27 +116,7 @@
           </div>
           @endif
         </div>
-        {{-- <div class="card card-body mx-4 mx-md-2">
-          <div class="row gx-4 mb-2">
-            <div class="col-auto">
-              <div class="avatar avatar-xl position-relative">
-                <img src="{{ Auth::user()->poto }}" alt="profile_image" class="w-100 border-radius-lg shadow-sm">
-              </div>
-            </div>
-            <div class="col-auto my-auto">
-              <div class="h-100">
-                <h5 class="mb-1">
-                  {{ Auth::user()->name }}
-                </h5>
-                <p class="mb-0 font-weight-normal text-sm">
-                  {{ Auth::user()->email }}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div> --}}
-
-        <div class="card text-center bg-light mt-4">
+        <div class="card text-center mt-4">
           <div class="card-body">
               <!-- Profile Picture -->
               <div class="d-flex justify-content-center align-items-center mb-3">
@@ -160,73 +139,90 @@
           <div class="card">
             <div class="card-body px-4 pb-2">
               <div class="table-responsive">
-                <table class="table align-items-center mb-0 display" id="tabelku">
-                  <thead>
-                    <tr>
-                        <th class="text-center text-uppercase text-secondary text-xs font-weight-bolder opacity-7">No</th>
-                        <th class="text-center text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Foto Makanan</th>
-                        <th class="text-center text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Nama Makanan</th>
-                        <th class="text-center text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                  @foreach ($userRecipes as $recipe)
-                    <tr>
-                        <td class="text-center">{{$loop->iteration}}</td>
-                        <td class="text-center"><img src="{{$recipe->link_gambar}}" class="w-30 border-radius-lg shadow-sm"></td>
-                        <td class="text-center">{{$recipe->nama_makanan}}</td>
-                        <td class="text-center">
-                          <a href="{{ route('resepDetail.show', $recipe->id) }}" class="btn btn-outline-primary">Lihat Resep
-                          </a>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
+                <table class="table table-bordered table-striped" id="userTable">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Name</th>
+                            <th>Username</th>
+                            <th>Poto</th>
+                            <th>Email</th>
+                            <th>Tanggal Daftar</th>
+                            <th>Terakhir Diubah</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($admin as $index => $user)
+                            <tr>
+                                <td>{{ $index + 1 }}</td>
+                                <td>{{ $user->name }}</td>
+                                <td>{{ $user->username }}</td>
+                                <td>
+                                    <img src="{{ $user->poto }}" alt="Poto" class="img-thumbnail" style="width: 50px; height: 50px;">
+                                </td>
+                                <td>{{ $user->email }}</td>
+                                <td>{{ $user->created_at->format('d M Y') }}</td>
+                                <td>{{ $user->updated_at->format('d M Y H:i') }}</td>
+                                <td>
+                                    <a href="{{ route('user.edit', $user->id) }}" class="btn btn-warning btn-sm">Edit</a>
+
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
                 </table>
-              </div>
+            </div>
             </div>
             </div>
           </div>
         </div>
       </div>
-      <footer class="footer py-4  ">
-        <div class="container-fluid">
-          <div class="row align-items-center justify-content-lg-between">
-            <div class="col-lg-6 mb-lg-0 mb-4">
-              <div class="copyright text-center text-sm text-muted text-lg-start">
-                © <script>
-                  document.write(new Date().getFullYear())
-                </script>,
-                <i class="fa fa-heart"></i> by
-                <a href="https://www.creative-tim.com" class="font-weight-bold" target="_blank">Karesepan Team</a>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </footer>
+      </div>
     </div>
-  </main>
-  <div class="modal fade" id="logout" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelLogout" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title" id="exampleModalLabelLogout">Upss!!</h4>
-          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+    <footer class="footer py-4  ">
+      <div class="container-fluid">
+        <div class="row align-items-center justify-content-lg-between">
+          <div class="col-lg-6 mb-lg-0 mb-4">
+            <div class="copyright text-center text-sm text-muted text-lg-start">
+              © <script>
+                document.write(new Date().getFullYear())
+              </script>,
+              <i class="fa fa-heart"></i> by
+              <a href="https://www.creative-tim.com" class="font-weight-bold" target="_blank">Karesepan Team</a>
+            </div>
+          </div>
         </div>
-        <div class="modal-body">
-          <p>Apa kamu yakin ingin Logout, {{ Auth::User()->name }} ?</p>
-        </div>
-        <div class="modal-footer">
-          <a href="/logout" class="btn btn-outline-danger" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
-          <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-            @csrf
-          </form>
+      </div>
+    </footer>
+    <div class="modal fade" id="logout" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelLogout" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="exampleModalLabelLogout">Upss!!</h4>
+            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Apa kamu yakin ingin Logout, {{ Auth::User()->name }} ?</p>
+          </div>
+          <div class="modal-footer">
+            <a href="/logout" class="btn btn-outline-danger" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+              @csrf
+            </form>
+          </div>
         </div>
       </div>
     </div>
   </div>
+
   @elseif(!Auth::check())
   <div class="container mt-8">
     <div class="row justify-content-center">
@@ -248,11 +244,14 @@
   <script src="../assets/js/core/bootstrap.min.js"></script>
   <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
   <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
-  <script src="../assets/js/plugins/chartjs.min.js"></script>
-  <script src="../assets/js/plugins/jquery-3.6.0.min.js"></script>   
-  <script src="../assets/js/plugins/dataTables.min.js"></script>
   <script>
-    let table = new DataTable('#tabelku');
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
   </script>
   <!-- Github buttons -->
   <script async defer src="https://buttons.github.io/buttons.js"></script>

@@ -9,6 +9,10 @@
     }
 
   </style>
+  <!-- CSRF Token -->
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <!-- Laravel PWA -->
+  @laravelPWA
 </head>
 <body>
   <main class="container d-flex align-items-center justify-content-center" style="height: 100vh;">

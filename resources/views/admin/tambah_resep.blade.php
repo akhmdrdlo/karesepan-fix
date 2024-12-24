@@ -19,6 +19,10 @@
   <!-- CSS Files -->
   <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
   <link rel="stylesheet" href="//cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css">
+  <!-- CSRF Token -->
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <!-- Laravel PWA -->
+  @laravelPWA
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
@@ -49,7 +53,7 @@
           <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Account pages</h6>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-dark" href="profile">
+          <a class="nav-link text-dark" href="admin">
             <i class="material-symbols-rounded opacity-5">person</i>
             <span class="nav-link-text ms-1">Profile</span>
           </a>
@@ -160,7 +164,7 @@
                         <button class="form-control btn btn-md btn-success col-md-10" type="submit"><i class="fa fa-plus"></i> | TAMBAH RESEP </button>
                       </div>
                       <div class="col-md-2">
-                        <a class="form-control btn btn-md btn-danger col-md-2" href="#" data-bs-toggle="modal" data-bs-target="#hapus">
+                        <a class="form-control btn btn-md btn-danger col-md-2" href="resep" data-bs-toggle="modal" data-bs-target="#hapus">
                             <i class="fas fa-trash fa-sm fa-fw mr-2 text-gray-400"></i> | KEMBALI
                         </a>
                       </div>

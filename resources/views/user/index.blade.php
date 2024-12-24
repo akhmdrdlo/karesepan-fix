@@ -7,22 +7,10 @@
     <link rel="icon" type="image/png" href="../assets/img/white_logo.png">
     <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/style.css">
-    <style>
-        .banner {
-            background-image: url('https://asset.kompas.com/crops/orQq3RlnkPNDfQgRASMWfCMppwg=/0x32:1000x699/1200x800/data/photo/2021/07/16/60f0d221ba7a6.jpeg');
-            background-size: cover;
-            background-position: center;
-            height: 60vh;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            text-align: center;
-            padding: 2rem;
-            border-radius: 20px;
-        }
-    </style>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <!-- Laravel PWA -->
+    @laravelPWA
 </head>
 <body>
 
@@ -125,20 +113,22 @@
                 </div>
                 <div class="col-md-6 card-body">
                     <div class="row">
-                        <div class="col-6">
-                            <img src="image1.jpg" alt="Image 1" class="img-fluid">
-                        </div>
-                        <div class="col-6">
-                            <img src="image2.jpg" alt="Image 2" class="img-fluid">
-                        </div>
+                        @if(count($resepAll) > 0) 
+                            @foreach($resepAll->take(2) as $resep) 
+                                <div class="col-6">
+                                    <img src="{{ asset($resep->link_gambar) }}" alt="{{ $resep->nama_makanan }}"  style="max-height:100px; object-fit: cover;" class="img-fluid">
+                                </div>
+                            @endforeach
+                        @endif
                     </div>
                     <div class="row mt-3">
-                        <div class="col-6">
-                            <img src="image3.jpg" alt="Image 3" class="img-fluid">
-                        </div>
-                        <div class="col-6">
-                            <img src="image4.jpg" alt="Image 4" class="img-fluid">
-                        </div>
+                        @if(count($resepAll) > 2) 
+                            @foreach($resepAll->slice(2, 2) as $resep) 
+                                <div class="col-6">
+                                    <img src="{{ asset($resep->link_gambar) }}" alt="{{ $resep->nama_makanan }}" style="max-height:100px; object-fit: cover;" class="img-fluid">
+                                </div>
+                            @endforeach
+                        @endif
                     </div>
                 </div>
             </div>

@@ -19,6 +19,10 @@
   <!-- CSS Files -->
   <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
   <link rel="stylesheet" href="../assets/css/dataTables.min.css">
+  <!-- CSRF Token -->
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <!-- Laravel PWA -->
+  @laravelPWA
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
@@ -49,7 +53,7 @@
           <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Account pages</h6>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-dark" href="profile">
+          <a class="nav-link text-dark" href="admin">
             <i class="material-symbols-rounded opacity-5">person</i>
             <span class="nav-link-text ms-1">Profile</span>
           </a>
@@ -146,7 +150,7 @@
                           <td class="text-center">{{$item->nama_makanan}}</td>
                           <td class="text-center">
                             <a href="{{ route('resepDetail.show', $item->id) }}" class="text-secondary font-weight-bold text-lg">
-                              <span class="badge badge-lg bg-info"><i class="fa fa-info"></i></span>
+                              <span class="badge badge-lg bg-info">Lihat Detail</span>
                             </a>
                           </td>
                       </tr>

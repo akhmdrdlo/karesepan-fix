@@ -7,6 +7,10 @@
     <link rel="stylesheet" href="../assets/css/style.css">'
     <title>Karesepan App</title>
     <link rel="icon" type="image/png" href="../assets/img/white_logo.png">
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <!-- Laravel PWA -->
+    @laravelPWA
 </head>
 <body>
 

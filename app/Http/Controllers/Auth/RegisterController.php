@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\resep_makanan;
+
 class RegisterController extends Controller
 {
     /**
@@ -12,6 +14,33 @@ class RegisterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function index()
+    {
+        // Ambil data pengguna yang sedang login
+        $user = auth()->user();
+        
+        // Hitung jumlah resep yang diposting oleh pengguna
+        $recipeCount = resep_makanan::where('user_id', $user->id)->count();
+                
+        // Tentukan title berdasarkan jumlah resep
+        $title = $this->getTitleByRecipeCount($recipeCount);
+
+        $admin = User::all();
+        return view('admin/admin', compact('admin','user','recipeCount','title'));
+    }
+
+    private function getTitleByRecipeCount($count)
+    {
+        if ($count >= 5) {
+            return 'Master Chef';
+        } elseif ($count >= 3){
+            return 'Experienced Cook';
+        } elseif ($count >= 1) {
+            return 'Novice Chef';
+        } else {
+            return 'Newbie';
+        }
+    }
  
 
     public function store(Request $request)
@@ -20,7 +49,7 @@ class RegisterController extends Controller
             'username' => 'required',
             'password' => 'required',
             'email' => 'required',
-            'poto' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048' // Validation for image upload
+            'poto' => 'image|mimes:jpeg,png,jpg,gif,svg' // Validation for image upload
         ]);
 
             
@@ -37,6 +66,13 @@ class RegisterController extends Controller
             // Handle image upload
             if ($request->hasFile('poto')) {
                 $image = $request->file('poto');
+            
+                // Validasi ukuran file
+                if ($image->getSize() > 2 * 1024 * 1024) {
+                    return redirect('../daftar')->with('danger', 'Ukuran file foto tidak boleh lebih dari 2MB.');
+                }
+            
+                // Proses penyimpanan file jika validasi lolos
                 $imageName = time() . '.' . $image->getClientOriginalExtension();
                 $image->move(public_path('images/profiles'), $imageName);
                 $user->poto = 'images/profiles/' . $imageName;
@@ -57,7 +93,7 @@ class RegisterController extends Controller
      */
     public function show($id)
     {
-        //
+
     }
 
     /**
@@ -69,7 +105,7 @@ class RegisterController extends Controller
     public function edit($id)
     {
         $admin = User::findOrFail($id); //mencari admin dengan id yang sesuai atau menampilkan 404 jika tidak ditemukan  
-        return view('updateAdmin', compact('admin'));
+        return view('admin/edit_admin', compact('admin'));
     }
 
     /**
@@ -88,7 +124,16 @@ class RegisterController extends Controller
         if ($request->password) { // Check if password field is filled
             $admin->password = bcrypt($request->password); // Hash the new password
         }
-        $admin->save();
+            // Handle image upload
+            if ($request->hasFile('poto')) {
+                $image = $request->file('poto');
+                $imageName = time() . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('images/profiles'), $imageName);
+                $admin->poto = 'images/profiles/' . $imageName;
+                $admin->save();
+            }else{
+                $admin->save();
+            }   
         
         if($id==Auth::user()->id){
             return redirect('/admin')->with('success', 'Data diri kamu berhasil diubah!!');

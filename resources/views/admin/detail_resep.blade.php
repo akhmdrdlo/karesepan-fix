@@ -18,6 +18,10 @@
   <!-- CSS Files -->
   <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
   <link rel="stylesheet" href="//cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css">
+    <!-- CSRF Token -->
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <!-- Laravel PWA -->
+  @laravelPWA
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
@@ -33,13 +37,13 @@
     <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link text-dark" href="profile">
+          <a class="nav-link text-dark" href="../profile">
             <i class="material-symbols-rounded opacity-5">dashboard</i>
             <span class="nav-link-text ms-1">Dashboard</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active bg-gradient-dark text-white" href="/resep">
+          <a class="nav-link active bg-gradient-dark text-white" href="../resep">
             <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Tabel Resep</span>
           </a>
@@ -48,7 +52,7 @@
           <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Account pages</h6>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-dark" href="profile">
+          <a class="nav-link text-dark" href="../admin">
             <i class="material-symbols-rounded opacity-5">person</i>
             <span class="nav-link-text ms-1">Profile</span>
           </a>
@@ -84,20 +88,10 @@
           </ol>
         </nav>
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
-          <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-            <div class="input-group input-group-outline">
-              <label class="form-label">Type here...</label>
-              <input type="text" class="form-control">
-            </div>
-          </div>
-          <ul class="navbar-nav d-flex align-items-center  justify-content-end">
-            <li class="nav-item px-3 d-flex align-items-center">
-              <a href="javascript:;" class="nav-link text-body p-0">
-                <i class="material-symbols-rounded fixed-plugin-button-nav">settings</i>
-              </a>
-            </li>
+          <ul class="navbar-nav ms-md-auto pe-md-3 d-flex  align-items-center  justify-content-end">
             <li class="nav-item d-flex align-items-center">
               <a href="../pages/sign-in.html" class="nav-link text-body font-weight-bold px-0">
+                {{ Auth::user()->name }}
                 <i class="material-symbols-rounded">account_circle</i>
               </a>
             </li>
@@ -198,12 +192,12 @@
                   </div>
                   <div class="row">
                     <div class="col-md-10">
-                      <button class="form-control btn btn-md btn-warning col-md-10" type="submit"><i class="fa fa-pen"></i> | EDIT BARANG </button>
+                      <button class="form-control btn btn-md btn-warning" type="submit">EDIT RESEP </button>
                     </div>
                     <div class="col-md-2">
-                      <a class="form-control btn btn-md btn-danger mx-4" href="#" data-bs-toggle="modal" data-bs-target="#hapus">
-                        <i class="fas fa-trash fa-sm fa-fw mr-2 text-gray-400"></i> | HAPUS
-                    </a>
+                      <a class="form-control btn btn-md btn-danger" href="#" data-bs-toggle="modal" data-bs-target="#hapus">
+                        HAPUS
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -231,7 +225,26 @@
           </footer>
     </div>
   </main>
-
+  <div class="modal fade" id="hapus" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelLogout" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title" id="HapusModal">Konfirmasi Hapus</h4>
+        </div>
+        <div class="modal-body">
+            <p>Apakah Anda yakin ingin menghapus resep <strong>"{{ $resep->nama_makanan }}"</strong>?</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+            <a href="#" class="btn btn-danger" onclick="event.preventDefault(); document.getElementById('hapus-form').submit();">Hapus</a>
+            <form id="hapus-form" action="{{ route('resep.destroy', $resep->id) }}" method="POST" style="display: none;">
+                @csrf
+                @method('DELETE')
+            </form>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="modal fade" id="logout" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelLogout" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">

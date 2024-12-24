@@ -37,13 +37,13 @@
     <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link active bg-gradient-dark text-white" href="profile">
+          <a class="nav-link text-dark" href="../profile">
             <i class="material-symbols-rounded opacity-5">dashboard</i>
             <span class="nav-link-text ms-1">Dashboard</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-dark" href="resep">
+          <a class="nav-link text-dark" href="../resep">
             <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Tabel Resep</span>
           </a>
@@ -52,7 +52,7 @@
           <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Account pages</h6>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-dark" href="admin">
+          <a class="nav-link active bg-gradient-dark text-white" href="../admin">
             <i class="material-symbols-rounded opacity-5">person</i>
             <span class="nav-link-text ms-1">Profile</span>
           </a>
@@ -69,7 +69,6 @@
     </div>
   </aside>
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-    <!-- Navbar -->
     <nav class="navbar navbar-main navbar-expand-lg px-0 mx-3 shadow-none border-radius-xl" id="navbarBlur" data-scroll="true">
       <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
         <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
@@ -99,113 +98,116 @@
         </div>
       </div>
     </nav>
-    <!-- End Navbar -->
-    <div class="container-fluid py-2">
+    <div class="container-fluid py-4">
       <div class="row">
-        <div class="ms-3">
-          <h3 class="mb-0 h4 font-weight-bolder">Dashboard</h3>
-          <p class="mb-4">
-            Karesepan Admin Dashboard
-          </p>
-          @if (session('success'))
-          <div class="alert alert-success text-white text-center">
-              {{ session('success') }}
-          </div>
-          @elseif (session('danger'))
-          <div class="alert alert-danger text-white text-center">
-              {{ session('danger') }}
-          </div>
-          @endif
-        </div>
-        {{-- <div class="card card-body mx-4 mx-md-2">
-          <div class="row gx-4 mb-2">
-            <div class="col-auto">
-              <div class="avatar avatar-xl position-relative">
-                <img src="{{ Auth::user()->poto }}" alt="profile_image" class="w-100 border-radius-lg shadow-sm">
-              </div>
-            </div>
-            <div class="col-auto my-auto">
-              <div class="h-100">
-                <h5 class="mb-1">
-                  {{ Auth::user()->name }}
-                </h5>
-                <p class="mb-0 font-weight-normal text-sm">
-                  {{ Auth::user()->email }}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div> --}}
-
-        <div class="card text-center bg-light mt-4">
-          <div class="card-body">
-              <!-- Profile Picture -->
-              <div class="d-flex justify-content-center align-items-center mb-3">
-                  <img src="{{ Auth::user()->poto }}" class="rounded-circle" alt="Profile Avatar" width="100" height="100">
-              </div>
-      
-              <!-- Username and Title -->
-              <h3 class="card-title mb-2">
-                  {{ $user->name }} 
-                  <span class="badge bg-primary">{{ $title }}</span>
-              </h3>
-      
-              <!-- Recipe Count -->
-              <p class="card-text">Jumlah Resep: <strong>{{ $recipeCount }}</strong></p>
-          </div>
-        </div>
-      </div>
-      <div class="row mb-4 mt-2">
-        <div class="col-lg-12 col-md-12 mb-md-0 mb-4">
+        <div class="col-md-12">
           <div class="card">
-            <div class="card-body px-4 pb-2">
-              <div class="table-responsive">
-                <table class="table align-items-center mb-0 display" id="tabelku">
-                  <thead>
-                    <tr>
-                        <th class="text-center text-uppercase text-secondary text-xs font-weight-bolder opacity-7">No</th>
-                        <th class="text-center text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Foto Makanan</th>
-                        <th class="text-center text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Nama Makanan</th>
-                        <th class="text-center text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                  @foreach ($userRecipes as $recipe)
-                    <tr>
-                        <td class="text-center">{{$loop->iteration}}</td>
-                        <td class="text-center"><img src="{{$recipe->link_gambar}}" class="w-30 border-radius-lg shadow-sm"></td>
-                        <td class="text-center">{{$recipe->nama_makanan}}</td>
-                        <td class="text-center">
-                          <a href="{{ route('resepDetail.show', $recipe->id) }}" class="btn btn-outline-primary">Lihat Resep
-                          </a>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-                </table>
-              </div>
+            <div class="card-header pb-0">
+              <h5 class="mb-0">Ubah Data Admin</h5>
             </div>
+            <hr>
+            <div class="card-body">
+              <form action="{{ route('user.update', $admin->id) }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="name" class="form-control-label font-weight-bolder">Nama</label>
+                      <input class="form-control" id="name" name="name" value="{{ $admin->name }}" type="text" placeholder="Nama Admin" required>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="username" class="form-control-label font-weight-bolder">Username</label>
+                      <input class="form-control" id="username" name="username" value="{{ $admin->username }}" type="text" placeholder="Username" required>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="email" class="form-control-label font-weight-bolder">Email</label>
+                      <input class="form-control" id="email" name="email" value="{{ $admin->email }}" type="email" placeholder="Email" required>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="poto" class="form-control-label font-weight-bolder">Foto</label>
+                      <input class="form-control" id="poto" name="poto" type="file" accept="image/*">
+                      <small class="text-muted">Kosongkan jika tidak ingin mengubah foto.</small>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="password" class="form-control-label font-weight-bolder">Password</label>
+                      <input class="form-control" id="password" name="password" type="password" placeholder="Password Baru">
+                      <small class="text-muted">Kosongkan jika tidak ingin mengubah password.</small>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="password_confirmation" class="form-control-label font-weight-bolder">Konfirmasi Password</label>
+                      <input class="form-control" id="password_confirmation" name="password_confirmation" type="password" placeholder="Konfirmasi Password Baru">
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12 text-end">
+                    <button class="btn btn-warning" type="submit">
+                      <i class="fas fa-save"></i> Simpan Perubahan
+                    </button>
+                        <a class="btn btn-md btn-danger" href="#" data-bs-toggle="modal" data-bs-target="#hapus">
+                          HAPUS
+                        </a>              
+                    </div>
+                </div>
+              </form>
             </div>
           </div>
         </div>
       </div>
-      <footer class="footer py-4  ">
-        <div class="container-fluid">
-          <div class="row align-items-center justify-content-lg-between">
-            <div class="col-lg-6 mb-lg-0 mb-4">
-              <div class="copyright text-center text-sm text-muted text-lg-start">
-                © <script>
-                  document.write(new Date().getFullYear())
-                </script>,
-                <i class="fa fa-heart"></i> by
-                <a href="https://www.creative-tim.com" class="font-weight-bold" target="_blank">Karesepan Team</a>
+    </div>
+
+          <footer class="footer py-4  ">
+            <div class="container-fluid">
+              <div class="row align-items-center justify-content-lg-between">
+                <div class="col-lg-6 mb-lg-0 mb-4">
+                  <div class="copyright text-center text-sm text-muted text-lg-start">
+                    © <script>
+                      document.write(new Date().getFullYear())
+                    </script>,
+                    <i class="fa fa-heart"></i> by
+                    <a href="https://www.creative-tim.com" class="font-weight-bold" target="_blank">Karesepan Team</a>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      </footer>
+          </footer>
     </div>
   </main>
+  <div class="modal fade" id="hapus" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelLogout" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title" id="HapusModal">Konfirmasi Hapus</h4>
+        </div>
+        <div class="modal-body">
+            <p>Apakah Anda yakin ingin menghapus admin <strong>"{{ $admin->name }}"</strong>?</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+            <a href="#" class="btn btn-danger" onclick="event.preventDefault(); document.getElementById('hapus-form').submit();">Hapus</a>
+            <form id="hapus-form" action="{{ route('user.destroy', $admin->id) }}" method="POST" style="display: none;">
+                @csrf
+                @method('DELETE')
+            </form>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="modal fade" id="logout" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelLogout" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -249,10 +251,16 @@
   <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
   <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
   <script src="../assets/js/plugins/chartjs.min.js"></script>
-  <script src="../assets/js/plugins/jquery-3.6.0.min.js"></script>   
-  <script src="../assets/js/plugins/dataTables.min.js"></script>
+  <script src="//cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
   <script>
     let table = new DataTable('#tabelku');
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
   </script>
   <!-- Github buttons -->
   <script async defer src="https://buttons.github.io/buttons.js"></script>

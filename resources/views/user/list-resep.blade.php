@@ -7,6 +7,10 @@
     <link rel="icon" type="image/png" href="../assets/img/white_logo.png">
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="../assets/css/style.css">
+        <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <!-- Laravel PWA -->
+    @laravelPWA
 <body>
 
 <!-- Navigation Bar -->

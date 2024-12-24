@@ -134,3 +134,18 @@
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+.banner {
+  background-image: url('https://asset.kompas.com/crops/orQq3RlnkPNDfQgRASMWfCMppwg=/0x32:1000x699/1200x800/data/photo/2021/07/16/60f0d221ba7a6.jpeg');
+  background-size: cover;
+  background-position: center;
+  height: 60vh;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  padding: 2rem;
+  border-radius: 20px;
+}
+
