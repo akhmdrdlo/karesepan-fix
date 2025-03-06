@@ -22,10 +22,13 @@ Karesepan is a website designed to provide a vast collection of recipes for food
 
 Here are some screenshots of the Karesepan website:
 
-![Homepage Screenshot](assets/screenshots/homepage.jpg)
+![image](https://github.com/user-attachments/assets/4354e7bf-f68a-47c4-acf7-ecdc8a4f9f77)
+*The Dashboard showcasinG the main page
+
+![image](https://github.com/user-attachments/assets/cb394266-af05-42b7-9e50-7879409b73bd)
 *The homepage showcasing the slider catalog of recipes.*
 
-![Recipe Detail Screenshot](assets/screenshots/recipe_detail.jpg)
+![image](https://github.com/user-attachments/assets/87325224-b468-42df-8627-c047a8f072d4)
 *The detail page of a selected recipe.*
 
 ---
